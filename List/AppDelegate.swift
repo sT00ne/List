@@ -7,15 +7,37 @@
 //
 
 import UIKit
+import SQLite
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        let mainstoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        if !NSUserDefaults .standardUserDefaults().boolForKey("firstLaunch") {
+            NSUserDefaults .standardUserDefaults().setBool(true, forKey: "firstLaunch")
+            println("yesyesyes")
+            database.execute(
+                "CREATE TABLE DB_Category (" +
+                    "CategoryID INTEGER PRIMARY KEY, " +
+                    "CategoryName TEXT NOT NULL, " +
+                    "CategoryContent TEXT " +
+            ")"
+            )
+            database.execute(
+                "CREATE TABLE DB_Item (" +
+                    "ItemID INTEGER PRIMARY KEY, " +
+                    "ItemName TEXT NOT NULL, " +
+                    "ItemContent TEXT, " +
+                    "CategroyID INTEGER, FOREIGN KEY(CategroyID) REFERENCES DB_Category(CategoryID) on delete cascade on update cascade " +
+                ")"
+            )
+        } else {
+            println("nonono")
+        }
+
         return true
     }
 
